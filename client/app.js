@@ -15,6 +15,10 @@ const projection = d3.geoMercator()
 const path = d3.geoPath()
   .projection(projection);
 
+const tooltip = d3.select('body')
+  .append('div')
+  .style('opacity', 0)
+  .classed('tooltip', true);
 
 
 const g = svg.append('g');
@@ -38,6 +42,7 @@ d3.json('https://unpkg.com/world-atlas@1/world/110m.json', (err, topology) => {
       .range(['blue', 'red']);
 
       renderCircles(features);
+      tooltipConfig();
   });
 
 	g.selectAll('path')
@@ -113,3 +118,25 @@ function scaleOpacity(d) {
 
   return 0.5;
 }
+
+
+function tooltipConfig() {
+  g.selectAll('circle')
+  .on('mouseover', d => {
+    tooltip
+      .style('left', `${d3.event.x}px`)
+      .style('top', `${d3.event.y}px`)
+      .html(`
+          <p><strong>Name: </strong>${d.properties.name}</p>
+          <p><strong>Mass: </strong>${d.properties.mass}</p>
+          <p><strong>Year: </strong>${new Date(d.properties.year).getFullYear()}</p>
+      `)
+      .transition(50)
+      .style('opacity', 0.70);
+  })
+  .on('mouseout', d => {
+    tooltip
+      .transition(150)
+      .style('opacity', 0);
+  });
+};

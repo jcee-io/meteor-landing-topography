@@ -1,8 +1,26 @@
 body {
 	width: 100vw;
+	background: black;
 }
 svg {
 	background: whitesmoke;
 	margin: 0 auto;
 	display: block;
+}
+
+
+.tooltip {
+	opacity: 0;
+	position: absolute;
+	pointer-events: none;
+	background: black;
+	color: white;
+	border-radius: 10px;
+	padding: 0 10px;
+	text-align: center;
+	border: black solid 3px;
+}
+
+#tip-content {
+	margin: auto;
 }
