@@ -28,4 +28,10 @@ d3.json('https://unpkg.com/world-atlas@1/world/110m.json', (err, topology) => {
     .attr('fill', 'grey');
 });
 
-const zoom = d3.behavior.zoom();
+const zoom = d3.zoom()
+  .scaleExtent([1,8])
+  .on('zoom', () => {
+    g.attr('transform', d3.event.transform);
+  });
+
+svg.call(zoom);
