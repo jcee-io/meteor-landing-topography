@@ -2,6 +2,12 @@ body {
 	width: 100vw;
 	background: black;
 }
+
+h1 {
+	color: whitesmoke;
+	text-align: center;
+	font-size: 3em;
+}
 svg {
 	background: whitesmoke;
 	margin: 0 auto;
