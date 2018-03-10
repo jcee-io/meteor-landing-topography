@@ -26,8 +26,9 @@ d3.json('https://unpkg.com/world-atlas@1/world/110m.json', (err, topology) => {
 
     features.forEach(d => d.properties.mass = Number(d.properties.mass));
 
+    features.sort((a, b) => b.properties.mass - a.properties.mass);
+
     const mExtent = d3.extent(features, d => d.properties.mass);
-    console.log(mExtent);
 
     const mScale = d3.scaleLinear()
       .domain(mExtent)
@@ -36,18 +37,7 @@ d3.json('https://unpkg.com/world-atlas@1/world/110m.json', (err, topology) => {
       .domain(mExtent)
       .range(['blue', 'red']);
 
-    g.selectAll('circle')
-      .data(features)
-      .enter()
-      .append('circle')
-      .attr('cx', d => {
-        return projection(d.geometry.coordinates)[0]
-      })
-      .attr('cy', d => {
-        return projection(d.geometry.coordinates)[1]
-      })
-      .attr('r', d => scaleMeteor(d.properties.mass))
-      .attr('fill', d => scaleColor(d.properties.mass));
+      renderCircles(features);
   });
 
 	g.selectAll('path')
@@ -68,9 +58,23 @@ svg.call(zoom);
 
 
 
+function renderCircles(data) {
+  g.selectAll('circle')
+    .data(data)
+    .enter()
+    .append('circle')
+    .attr('cx', d => projection(d.geometry.coordinates)[0])
+    .attr('cy', d => projection(d.geometry.coordinates)[1])
+    .attr('r', scaleMeteor)
+    .attr('fill', scaleColor)
+    .attr('stroke', 'white')
+    .attr('position', 'relative')
+    .attr('opacity', scaleOpacity); 
+}
 
+function scaleMeteor(d) {
+  const mass = d.properties.mass;
 
-function scaleMeteor(mass) {
   if (mass < 40000) {
     return 2;
   } else if (mass < 500000) {
@@ -82,14 +86,30 @@ function scaleMeteor(mass) {
   return 12;
 }
 
-function scaleColor(mass) {
+function scaleColor(d) {
+  const mass = d.properties.mass;
+
   if (mass < 40000) {
-    return 'yellow';
+    return 'blue';
   } else if (mass < 500000) {
-    return 'orange';
+    return 'green';
   } else if (mass < 1500000) {
     return 'orangered';
   }
 
   return 'red';
+}
+
+function scaleOpacity(d) {
+  const mass = d.properties.mass;
+
+  if (mass < 40000) {
+    return 0.9;
+  } else if (mass < 500000) {
+    return 0.8;
+  } else if (mass < 1500000) {
+    return 0.6;
+  }
+
+  return 0.5;
 }
