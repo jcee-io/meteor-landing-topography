@@ -46,8 +46,8 @@ d3.json('https://unpkg.com/world-atlas@1/world/110m.json', (err, topology) => {
       .attr('cy', d => {
         return projection(d.geometry.coordinates)[1]
       })
-      .attr('r', d => mScale(d.properties.mass))
-      .attr('fill', d => cScale(d.properties.mass));
+      .attr('r', d => scaleMeteor(d.properties.mass))
+      .attr('fill', d => scaleColor(d.properties.mass));
   });
 
 	g.selectAll('path')
@@ -65,3 +65,31 @@ const zoom = d3.zoom()
   });
 
 svg.call(zoom);
+
+
+
+
+
+function scaleMeteor(mass) {
+  if (mass < 40000) {
+    return 2;
+  } else if (mass < 500000) {
+    return 4;
+  } else if (mass < 1500000) {
+    return 8;
+  }
+
+  return 12;
+}
+
+function scaleColor(mass) {
+  if (mass < 40000) {
+    return 'yellow';
+  } else if (mass < 500000) {
+    return 'orange';
+  } else if (mass < 1500000) {
+    return 'orangered';
+  }
+
+  return 'red';
+}
