@@ -20,6 +20,10 @@ const g = svg.append('g');
 
 d3.json('https://unpkg.com/world-atlas@1/world/110m.json', (err, topology) => {
 
+  d3.json('https://raw.githubusercontent.com/FreeCodeCamp/ProjectReferenceData/master/meteorite-strike-data.json', (err, mapData) => {
+    console.log(mapData);
+  });
+
 	g.selectAll('path')
 	  .data(topojson.object(topology, topology.objects.countries).geometries)
 	  .enter()
